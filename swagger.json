@@ -1,0 +1,45 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "CRUD Prisma",
+    "description": "CRUD Prisma Application API",
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "securityDefinitions": {
+    "api_key": {
+      "type": "apiKey",
+      "name": "api-key",
+      "in": "header"
+    }
+  },
+  "host": "localhost:4000",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "Users",
+      "description": "API for users in the system"
+    }
+  ],
+  "definitions": {
+    "server side error": {
+      "$status": "ERROR",
+      "$msg": "some error message",
+      "error": {
+        "$message": "Error message caught",
+        "$name": "Error name",
+        "stack": "Error stack"
+      }
+    },
+    "calculation": {
+      "$createdAt": "2020-03-31T00:00:00.000Z",
+      "$result": 100
+    }
+  },
+  "schemes": ["http"],
+  "consumes": ["application/json"],
+  "produces": ["application/json"]
+}
