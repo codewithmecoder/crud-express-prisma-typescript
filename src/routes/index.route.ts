@@ -3,15 +3,17 @@ import express, { Request, Response } from "express";
 const router = express.Router();
 
 /**
- * @swagger
- * /api/:
+ * @openapi
+ * /healthcheck:
  *  get:
- *    description: Checking health of the application
- *    responses:
- *      '200':
- *        description: A successful response
+ *     tags:
+ *     - Healthcheck
+ *     description: Responds if the app is up and running
+ *     responses:
+ *       200:
+ *         description: App is up and running
  */
-router.get("/", (req: Request, res: Response) => {
+router.get("/healthcheck", (req: Request, res: Response) => {
   res.status(200).json({ message: "We're all good!!!😁❤😘", statusCode: 200 });
 });
 
