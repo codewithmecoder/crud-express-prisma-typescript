@@ -5,6 +5,6 @@ const app = createServer();
 
 describe("health checking", () => {
   it("should response ok", async () => {
-    await supertest(app).get(`/api/healthcheck`).expect(200);
+    await supertest(app).get(`/healthcheck`).expect(200);
   });
 });
