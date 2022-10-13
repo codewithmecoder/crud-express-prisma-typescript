@@ -1,6 +1,8 @@
 import express, { Request, Response } from "express";
 import {
   createUserHandler,
+  getUserByIdHandler,
+  getUserByUsernameHandler,
   getUsersHandler,
 } from "../controllers/user.controller";
 
@@ -57,4 +59,45 @@ router.get("/getUsers", async (req: Request, res: Response) =>
   getUsersHandler(req, res)
 );
 
+/**
+ * @openapi
+ * '/api/users/:id':
+ *  get:
+ *     tags:
+ *     - User
+ *     summary: getting user by id
+ *     responses:
+ *      200:
+ *        description: Success
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/User'
+ *      404:
+ *        description: not found
+ */
+router.get("/:id", async (req: Request, res: Response) =>
+  getUserByIdHandler(req, res)
+);
+
+/**
+ * @openapi
+ * '/api/users/:username/byusername':
+ *  get:
+ *     tags:
+ *     - User
+ *     summary: getting user by username
+ *     responses:
+ *      200:
+ *        description: Success
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/User'
+ *      404:
+ *        description: not found
+ */
+router.get("/:username/byusername", async (req: Request, res: Response) =>
+  getUserByUsernameHandler(req, res)
+);
 export default router;

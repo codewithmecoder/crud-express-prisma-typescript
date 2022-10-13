@@ -1,6 +1,9 @@
 import dotenv from "dotenv";
 import createServer from "./utils/server";
-dotenv.config();
+import path from "path";
+dotenv.config({
+  path: path.resolve(__dirname, `../.env.${process.env.NODE_ENV}`),
+});
 import logger from "./utils/logger";
 import swaggerDocs from "./utils/swagger";
 const port = process.env.PORT || "4000";

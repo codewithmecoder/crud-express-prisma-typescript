@@ -1,8 +1,8 @@
 import supertest from "supertest";
 import createServer from "../../utils/server";
 import * as UserService from "../../services/user.service";
-import { Prisma } from "@prisma/client";
-
+import { Prisma, PrismaClient } from "@prisma/client";
+const prisma = new PrismaClient();
 const app = createServer();
 
 const userPayload = {
@@ -21,6 +21,20 @@ const userInput: Prisma.UserCreateInput = {
 };
 
 describe("user", () => {
+  beforeAll(async () => {
+    // create product categories
+    await prisma.user.create({ data: userInput });
+
+    console.log("✨ user successfully created!");
+  });
+
+  afterAll(async () => {
+    const deleteUsers = prisma.user.deleteMany();
+
+    await prisma.$transaction([deleteUsers]);
+
+    await prisma.$disconnect();
+  });
   describe("create user", () => {
     it("should return the user payload", async () => {
       const createUserServiceMock = jest
@@ -40,19 +54,39 @@ describe("user", () => {
   });
   describe("get users", () => {
     it("should return all the users", async () => {
-      const createUserServiceMock = jest
-        .spyOn(UserService, "getUsers")
-        // @ts-ignore
-        .mockReturnValueOnce(userPayload);
+      const { statusCode, body } = await supertest(app).get(
+        "/api/users/getUsers"
+      );
+      expect(statusCode).toBe(200);
+      expect(body.length).toEqual(1);
+    });
+  });
 
-      const { statusCode, body } = await supertest(app)
-        .post("/api/users/")
-        .send(userInput);
+  describe("get user by id", () => {
+    it("should return not found 404", async () => {
+      const { statusCode } = await supertest(app).get("/api/users/0");
+      expect(statusCode).toBe(404);
+    });
 
-      expect(statusCode).toBe(201);
-      expect(body).toEqual(userPayload);
+    it("should return not found 400", async () => {
+      const { statusCode, body } = await supertest(app).get("/api/users/c");
+      expect(statusCode).toBe(400);
+      expect(body).toEqual({ error: true, message: "id is not valid" });
+    });
+  });
 
-      expect(createUserServiceMock).toHaveBeenCalledWith(userInput);
+  describe("get user by username", () => {
+    it("should return user payload with 200 status", async () => {
+      const { statusCode } = await supertest(app).get(
+        "/api/users/test1/byusername"
+      );
+      expect(statusCode).toBe(200);
+    });
+    it("should return not found 404", async () => {
+      const { statusCode } = await supertest(app).get(
+        "/api/users/test01/byusername"
+      );
+      expect(statusCode).toBe(404);
     });
   });
 });

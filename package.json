@@ -7,7 +7,11 @@
   "author": "Sokcheanith(codewithmecoder)",
   "license": "MIT",
   "scripts": {
-    "test": "jest --watch",
+    "docker:up": "docker-compose up -d --remove-orphans",
+    "docker:down": "docker-compose down",
+    "docker:up:test": "docker-compose -f ./docker-compose-develop.yml up -d",
+    "docker:down:test": "docker-compose -f ./docker-compose-develop.yml down",
+    "test": "yarn docker:up:test && yarn prisma migrate deploy && jest --passWithNoTests",
     "dev": "ts-node-dev --respawn --transpile-only src/app.ts",
     "prod": "tsc && node build/src/app.js",
     "seeding": "ts-node-dev --respawn --transpileOnly prisma/seed.ts"
